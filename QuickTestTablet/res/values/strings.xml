@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">QuickTest</string>
+    <string name="hello_world">Hello world!</string>
+    
+    <string name="presentationId">Enter Presentation Id</string>
+    <string name="studentName">Enter Your Name</string>
+    <string name="errorPresentationId">Invalid presentation Id</string>
+    <string name="login">Login</string>
+    
+    <string name="A">A</string>
+    <string name="B">B</string>
+    <string name="C">C</string>
+    <string name="D">D</string>
+    <string name="E">E</string>
+
+</resources>
