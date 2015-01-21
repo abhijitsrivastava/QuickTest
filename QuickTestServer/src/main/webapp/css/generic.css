@@ -1,0 +1,98 @@
+body {
+	background-color: #D7D7D7;
+	padding-bottom: 10px;
+	padding-top: 10px;
+}
+
+.legend {
+	background: none repeat scroll 0 0 #2E75B6;
+	text-align: center;
+	color: #FFFFFF;
+	font-size: 25px;
+	font-weight: bold;
+	padding:10px 0 10px 0;
+	margin: 5px 0 5px 0;
+	/* border-radius: 10px 10px 10px 10px; */
+}
+
+.btn-primary {
+	background-color: #BDD7EE;
+	border-color: #BDD7EE;
+	color: #000000;
+}
+
+.btn-primary:hover,.btn-primary:focus,.btn-primary:active,.btn-primary.active,.open .dropdown-toggle.btn-primary {
+	background-color: #9DC3E6;
+	border-color: #9DC3E6;
+	color: #FFFFFF;
+}
+
+.background_image_header {
+	background-color: #D7D7D7;
+}
+
+.background_body {
+	background-color: #EAEAEA;
+	/* border-radius: 5px 5px 5px 5px; */
+	/* box-shadow: 0 0 15px rgba(1, 1, 1, 1); */ */
+	
+	margin: 0 auto 0 0; 
+	padding: 1px 0 0 0;
+}
+
+.lesson_body {
+	background-color: #EAEAEA;
+	/* border-radius: 5px 5px 5px 5px; */
+	margin: 0 30px 0 30px; 
+	padding: 0;
+}
+
+.header-background {
+	background-color: #D7D7D7;
+	padding:5px 20px 5px 20px;
+}
+
+.footer {
+	background: none repeat scroll 0 0 #D7D7D7;
+	color: #FFFFFF;
+	font-size: 12px;
+	padding: 10px 0 5px 0;
+	text-align: center;
+	margin: 50px 0 0 0;
+	padding: 20px 20px 20px 20px;
+}
+
+.error {
+	color: #ff0000;
+	font-size: 16px;
+	height: auto;
+	margin-bottom: 10px;
+	padding: -1px 9px;
+}
+
+.info {
+	color: #31708F;
+	font-size: 16px;
+	height: auto;
+	margin-bottom: 10px;
+	padding: -1px 9px;
+}
+
+.form-addEditLogo{
+	background-color: #F6F6F6;
+	border-radius: 5px 5px 5px 5px;
+	box-shadow: 2px 3px 9px rgba(0, 0, 0, 0.2);
+	margin: 0 auto 20px;
+	max-width: 850px;
+	padding: 19px 29px 29px;
+}
+
+button::-moz-focus-inner {
+	border: 0;
+	padding: 0;
+}
+
+.active {
+  background-color: #222;
+  background-color: rgba(0, 0, 0, 0.5);
+}

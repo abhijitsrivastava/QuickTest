@@ -1,0 +1,69 @@
+
+<Html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">  
+		<script type="text/JavaScript" src="mqttws31.js"></script>
+		<script type="text/JavaScript" src="jquery-1.4.2.min.js"></script>
+		<script type="text/JavaScript">
+
+  var client;
+
+  function doConnect() {
+
+    client = new Messaging.Client("172.16.4.164", 8080, "mqttv3.1");
+    console.log("Client instantiated.");
+    client.startTrace();
+    console.log("Now trying to connect...");
+	client.onMessageArrived = onMessageArrived;
+    client.connect({onSuccess:onConnect});
+  }
+
+  function onConnect() {
+
+    console.log("connection established");
+    doSubscribe();
+  }
+
+  function doSubscribe() {
+
+      client.subscribe("eduglass/test/display");
+	console.log("Subscription established");
+  }
+function onMessageArrived(message) {
+	var dataReceived = message.payloadBytes;
+	var dataString = arrayBufferToBase64(dataReceived);
+	console.log("onMessageArrived:"+ dataString);
+	
+	$('img').attr('src', "data:image/jpg;base64," + dataString);
+	
+  //$('#messagelist').prepend('<li>'+message.destinationName+ '->' +message.payloadString+'</li>');
+
+//var form = document.getElementById("example");
+
+//form.receiveMsg.value = message.payloadString;
+
+}
+  
+  window.onload = function() {
+
+      this.doConnect();
+
+  }
+
+  function arrayBufferToBase64( buffer ) {
+    var binary = ''
+    var bytes = new Uint8Array( buffer )
+    var len = buffer.byteLength;
+    for (var i = 0; i < len; i++) {
+        binary += String.fromCharCode( bytes[ i ] )
+    }
+    return window.btoa( binary );
+}
+</script>
+</head> 
+<body>
+
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" alt="Red dot">
+
+</body>
+</html>
