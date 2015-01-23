@@ -37,8 +37,11 @@
 <script type="text/JavaScript">
 
 	var client;
-	//var interval = 0;
 	var stopwatch;
+	var assessmentId = 0;
+	var questionNumber = 0;
+	var totalQuestion = "${requestScope.numberOfQuestions}";
+	var resourceUrls = [];
 	
 	$(function() {
 		
@@ -50,7 +53,13 @@
 			console.log("Full screen error.");
 		});
 		
-		
+		var lessonId = "${requestScope.lessonId}";
+    	var sectionId = "${requestScope.sectionId}";
+    	
+    	console.log("totalQuestion: " + totalQuestion + "\nlessonId: " + lessonId + "\nsectionId: " + sectionId);
+		for(var i=0; i<totalQuestion; i++) {
+			resourceUrls[i] = "http://ec2-54-187-106-124.us-west-2.compute.amazonaws.com:8080/lessons/" + lessonId + "/" + sectionId + "/" + (i+1) + ".png";
+		}
 	});
 	
 	function doConnect() {
@@ -98,10 +107,13 @@
 
 	function doSubscribe() {
 		client.subscribe("${requestScope.topic}");
-		console.log("Subscription established");
+		console.log('Subscription established on topic "${requestScope.topic}"');
 		$("#div-loader").hide();
 		$("#label-message").show();
 		$("#label-message").html("Connected!<br/>No section to display");
+		if (${requestScope.isTeacher}){		
+		$("#button-edugrade").show();
+		}
 	}
 	
 	function videoFullScreen() {
@@ -113,7 +125,6 @@
 		//var dataString = arrayBufferToBase64(dataReceived);
 		console.log("onMessageArrived:" + message.payloadString);
 		var json = $.parseJSON(message.payloadString);
-		
 		var type = json.type;
 		var url = decodeURIComponent(json.url);
 		console.log(type + "\n" + url);
@@ -134,15 +145,12 @@
 			this.pause();
 		});
 
-		//$("#button-toggle-fullscreen-ppt").toggle($("#dashboard").fullScreen() != null);
 		switch(type) {
 		
 		case "POWERPOINT":
 
 			$("#img-powerpoint").show();
 			$("#img-powerpoint").attr("src", url);
-			
-			
 			break;
 			
 		case "VIDEO":
@@ -178,7 +186,6 @@
 			var assessmentId = json.assessmentId;
 			var teacherId = json.teacherId;
 			var serial = json.questionNumber; // -1
-			
 			$("#label-message").show();
 			$("#label-edugrade-assessment").show();
 			
@@ -352,15 +359,15 @@
 
 		this.doConnect();
 	 	//alert(navigator.userAgent);
-		if(navigator.userAgent.toLowerCase().indexOf("android") != -1
-				|| navigator.userAgent.toLowerCase().indexOf("ipad") != -1 
-				|| navigator.userAgent.toLowerCase().indexOf("iphone") != -1
-				|| navigator.userAgent.toLowerCase().indexOf("ipod") != -1) {
+		//if(navigator.userAgent.toLowerCase().indexOf("android") != -1) {
+			
+			if (!${requestScope.isTeacher}){
+			
 			$("#div-header-container").hide();
 			$("#div-footer-container").hide();
 			$("#button-toggle-fullscreen-ppt").hide();
 			$("#span-fullscreen-msg").hide();
-			
+			$("#button-edugrade").hide();
 			$("body").css("padding", 0);
 			$("body").css("margin", 0);
 			
@@ -465,12 +472,269 @@
 						+ e);
 	}
 	
-	function handleQuiz() {
+	function handleQuiz(button) {
 		
+		console.log($(button).html() + " -> Teacher ID :" + "${requestScope.teacherId}");
 		
+		switch($(button).html()) {
+		case "Start Assessment":
+			
+			var jsonString = '{"teacherId":"${requestScope.teacherId}"}';
+			$.ajax({
+			    url: "http://ec2-54-187-106-124.us-west-2.compute.amazonaws.com:8080/EduGrade/rest/edu-grade-service/create-assessment",
+			    type: "POST",
+			    dataType : 'json',
+				data : jsonString,
+				contentType : 'application/json',
+				mimeType : 'application/json',
+			    complete: function(response) {
+			    	
+			    	console.log(response.responseText);
+			    	var responseJson = JSON.parse(response.responseText);
+			    	if(responseJson.statusCode == "EDU_102") {
+			    		$(button).html("Start Next Question");
+			    		
+			    		assessmentId = responseJson.assessmentId;
+			    		questionNumber = 1;
+			    		
+			    		$("#label-message").show();
+						$("#label-edugrade-assessment").show();
+						
+						$("#label-message").html("EduGrade is running!");
+						$("#label-edugrade-assessment").html("Assessment ID: " + assessmentId);
+						
+						var jsonString = '{"type":"ASSESSMENT_CREATE", "url":"", "assessmentId":"'+assessmentId+'", "teacherId":"${requestScope.teacherId}", "questionNumber":"-1"}';
+						sendMessage(jsonString);
+						
+			    	} else {
+			    		alert(responseJson.message);	
+			    	}
+			    },
+			    error: function(jqXHR,error, errorThrown) {  
+		               
+			    	if(jqXHR.status && jqXHR.status == 400) {
+		            	alert(jqXHR.responseText); 
+		            } else {
+		                alert("Something went wrong");
+		            }
+		        }
+        	});
+			break;
 		
-		${requestScope.teacherId};
+		case "Start Next Question":
+			
+			/* JSONObject json = new JSONObject();
+			try {
+				json.put("type", "QUESTION_START");
+				json.put("url", slides.get(questionCounter-1));
+				json.put("assessmentId", assessmentId + "");
+				json.put("teacherId", teacherId + "");
+				json.put("questionNumber", questionCounter + "");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			mqttConnection.publishMessage(json); */
+			
+			/* JSONObject holder = new JSONObject();
+            holder.put(Constants.KEY_ASSESSMENT_ID, params[1]);
+            holder.put(Constants.KEY_QUESTION_NUMBER, params[2]);
+            holder.put(Constants.KEY_QUESTION_STATUS, params[3]); */
+			
+            if(resourceUrls.length <= 0) {
+            	alert("No question found");
+            	return;
+            }
+            
+            var jsonString = '{"assessmentId":"' + assessmentId +'","questionNumber":"' + questionNumber + '","questionStatus":"1"}';
+            //console.log("Request Json: " + jsonString);
+			$.ajax({
+			    url: "http://ec2-54-187-106-124.us-west-2.compute.amazonaws.com:8080/EduGrade/rest/edu-grade-service/question-update",
+			    type: "POST",
+			    dataType : 'json',
+				data : jsonString,
+				contentType : 'application/json',
+				mimeType : 'application/json',
+			    complete: function(response) {
+			    	
+			    	//console.log(response.responseText);
+			    	//http://ec2-54-187-106-124.us-west-2.compute.amazonaws.com:8080/lessons/29/141/1.png
+			    	//var lessonId = 29;
+			    	//var sectionId = 141;
+			    	//var resourceUrl = "http://ec2-54-187-106-124.us-west-2.compute.amazonaws.com:8080/lessons/29/141/1.png";
+			    	var responseJson = JSON.parse(response.responseText);
+			    	if(responseJson.statusCode == "EDU_105_1") {
+			    		$(button).html("Close Question and Show Result");
+			    		
+			    		var jsonString = '{"type":"QUESTION_START", "url":"' 
+			    			+ resourceUrls[questionNumber-1] + '", "assessmentId":"' 
+			    			+ assessmentId + '", "teacherId":"${requestScope.teacherId}", "questionNumber":"' 
+			    			+ questionNumber + '"}';
+			    		sendMessage(jsonString);
+			    	} else {
+			    		alert(responseJson.message);
+			    	}
+			    	console.log(responseJson.message);
+			    },
+			    error: function(jqXHR, error, errorThrown) {  
+		               
+			    	if(jqXHR.status && jqXHR.status == 400) {
+		            	alert(jqXHR.responseText); 
+		            } else {
+		                alert("Something went wrong");
+		            }
+		        }
+        	});
+			
+			break;
+		
+		case "Close Question and Show Result":
+			
+			/* JSONObject json = new JSONObject();
+			try {
+				json.put("type", "QUESTION_STOP");
+				json.put("url", slides.get(questionCounter-2));
+				json.put("assessmentId", assessmentId + "");
+				json.put("teacherId", teacherId + "");
+				json.put("questionNumber", (questionCounter-1) + "");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			mqttConnection.publishMessage(json); */
+			
+			var jsonString = '{"assessmentId":"' + assessmentId +'","questionNumber":"' + questionNumber + '","questionStatus":"0"}';
+            //alert(jsonString);
+			$.ajax({
+			    url: "http://ec2-54-187-106-124.us-west-2.compute.amazonaws.com:8080/EduGrade/rest/edu-grade-service/question-update",
+			    type: "POST",
+			    dataType : 'json',
+				data : jsonString,
+				contentType : 'application/json',
+				mimeType : 'application/json',
+			    complete: function(response) {
+			    	
+			    	//console.log(response.responseText);
+			    	var responseJson = JSON.parse(response.responseText);
+			    	if(responseJson.statusCode == "EDU_105_0") {
+			    		
+			    		var jsonString = '{"type":"QUESTION_STOP", "url":"' 
+			    			+ resourceUrls[questionNumber-1] + '", "assessmentId":"' 
+			    			+ assessmentId + '", "teacherId":"${requestScope.teacherId}", "questionNumber":"' 
+			    			+ questionNumber + '"}';
+						
+			    		sendMessage(jsonString);
+			    		fetchResult(button);
+			    	} else {
+			    		
+			    		alert(responseJson.message);	
+			    	}
+			    	
+			    	console.log(responseJson.message);
+			    },
+			    error: function(jqXHR,error, errorThrown) {  
+		               
+			    	if(jqXHR.status && jqXHR.status == 400) {
+		            	alert(jqXHR.responseText); 
+		            } else {
+		                alert("Something went wrong");
+		            }
+		        }
+        	});
+			
+			break;
+		
+		case "End Assessment":
+			$(button).html("Start Assessment");
+			var jsonString = '{"type":"EDUGRADE", "url":""}';
+    		sendMessage(jsonString);
+			break;
+		}
 	}
+	
+	function fetchResult(button) {
+		
+		/* JSONObject json = new JSONObject();
+		try {
+
+			JSONArray array = new JSONArray(distribution);
+			json.put("type", "EDUGRADE_OPEN_CHART");
+			json.put("url", "");
+			json.put("answers", array);
+
+			mqttConnection.publishMessage(json);
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		} */
+		
+		var jsonString = '{"assessmentId":"' + assessmentId +'","questionNumber":"' + questionNumber + '"}';
+		console.log("Request String: " + jsonString);
+		$.ajax({
+		    url: "http://ec2-54-187-106-124.us-west-2.compute.amazonaws.com:8080/EduGrade/rest/edu-grade-service/assessment-data",
+		    type: "POST",
+		    dataType : 'json',
+			data : jsonString,
+			contentType : 'application/json',
+			mimeType : 'application/json',
+		    complete: function(response) {
+		    	
+		    	console.log(response.responseText);
+		    	var responseJson = JSON.parse(response.responseText);
+		    	if(responseJson.statusCode == "EDU_112") {
+		    		questionNumber++;
+		    		if(questionNumber > totalQuestion) {
+		    			$(button).html("End Assessment");		
+		    		} else {
+		    			$(button).html("Start Next Question");
+		    		}
+		    		
+		    		var studentAnswers = responseJson.studentAnswers;
+		    		if(studentAnswers.length > 0) {
+		    		
+			    		var answerA = answerB = answerC = answerD = answerE = 0;
+			    		for(var i=0; i<studentAnswers.length; i++) {
+			    			var studentAnswer = studentAnswers[i];
+			    			var answer = studentAnswer.selectedAnswer;
+			    			var studentName = studentAnswer.studentName
+			    			if(answer == "A") {
+			    				answerA++;
+			    			} else if(answer == "B") {
+			    				answerB++;
+			    			} else if(answer == "C") {
+			    				answerC++;
+			    			} else if(answer == "D") {
+			    				answerD++;
+			    			} else {
+			    				answerE++;
+			    			}
+			    		}
+			    		var answers = [answerA, answerB, answerC, answerD, answerE];
+			    		var jsonString = '{"type":"EDUGRADE_OPEN_CHART", "url":"", "answers":[' 
+			    			+ answers + ']}';
+						
+			    		sendMessage(jsonString);
+		    		}
+		    	} else {
+		    		alert(responseJson.message);	
+		    	}
+		    	console.log(responseJson.message);
+		    },
+		    error: function(jqXHR,error, errorThrown) {  
+	               
+		    	if(jqXHR.status && jqXHR.status == 400) {
+	            	alert(jqXHR.responseText); 
+	            } else {
+	                alert("Something went wrong");
+	            }
+	        }
+    	});
+	}
+	
+	function sendMessage(json) {
+		var message = new Messaging.Message(json);
+		message.destinationName = "${requestScope.topic}"
+		client.send(message);
+	}
+	
 </script>
 
 <style>
@@ -542,11 +806,6 @@
 					<input type="hidden" id="stream" value="" class="stream-class"></input>
 				</div>
 				
-				<button>Start Assessment</button>
-				<button>Start Next Question</button>
-				<button>Close Question and Show Result</button>
-			
-				
 				<ul id="ul-legend" style="margin-top: 150px; padding:0;display:none;">
 				<li id="li-a" class="li-legend"></li>
 				<li id="li-b" class="li-legend"></li>
@@ -557,6 +816,7 @@
 				
 				<canvas id="chart-area" style="margin-top: 50px;display:none;" width="300" height="300"/>
 			</div>
+			<button id="button-edugrade" onclick="javascript: handleQuiz(this);" style="margin-top:50px; display:none;">Start Assessment</button>
 			<button id="button-toggle-fullscreen-ppt" onclick="$('#dashboard').toggleFullScreen();" style="display: block;margin-top: 100px;">Toggle fullscreen mode</button>
 			<span id="span-fullscreen-msg" style="display: block;">*For best view and experience, select full screen mode</span>
 			</center>

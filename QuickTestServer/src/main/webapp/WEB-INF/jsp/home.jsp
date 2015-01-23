@@ -18,7 +18,7 @@
 		<script type="text/javascript">
 		
 		function slideShow(lessonId) {
-			window.location.href="./viewSlideShow.htm?lessonId=" + lessonId; 
+			window.location.href="./viewSlideShow.htm?isTeacher="+true+"&lessonId="+lessonId; 
 		}
 		
 			function deleteLesson(lessonId){ 
@@ -37,10 +37,6 @@
 				window.location.href="./generateQRCode.htm?lessonId=" + lessonId; 
 			}
 			
-			function slideShow(lessonId) {
-				window.location.href="./viewSlideShow.htm?lessonId=" + lessonId; 
-			}
-		
 			window.onload = function() {
 				$("div.background_body").css("box-shadow", "0 0 15px rgba(1, 1, 1, 1)");
 			}

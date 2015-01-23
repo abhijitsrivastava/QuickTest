@@ -291,7 +291,8 @@ public class LessonController {
 	}
 
 	@RequestMapping(value = "/viewSlideShow", method = RequestMethod.GET)
-	public String viewSlideShow(@RequestParam Long lessonId, ModelMap map,
+	public String viewSlideShow(@RequestParam boolean isTeacher,@RequestParam Long lessonId,
+			ModelMap map,
 			HttpServletRequest request) {
 		HttpSession session = request.getSession();
 
@@ -299,10 +300,9 @@ public class LessonController {
 				PropertiesFileReaderUtil.getApplicationProperty("broker-url"));
 
 		Lesson lesson = lessonService.getLesson(lessonId);
-		
-		List<Section> sections = sectionService
-				.getAllSectionsForLesson(lesson);
-		
+
+		List<Section> sections = sectionService.getAllSectionsForLesson(lesson);
+
 		long teacherId = lesson.getUser().getEduGradeTeacherId();
 
 		if (sections.size() == 0) {
@@ -310,12 +310,24 @@ public class LessonController {
 					+ (Long) session.getAttribute("lessonId");
 
 		}
-		Long sectionId = sections.get(0).getId();
+		long sectionId = 0;
+		long numberOfQuestions = 0;
+		for (Section section : sections) {
+			if (section.getSectionType().equals(SectionTypeEnum.QUIZ)) {
+				sectionId = section.getId();
+				numberOfQuestions = section.getNumberOfSlides();
+			}
+		}
 
 		map.addAttribute("topic",
 				PropertiesFileReaderUtil.getApplicationProperty("base.topic")
 						+ lessonId);
-		map.addAttribute("teacherId",""+teacherId);
+		map.addAttribute("teacherId", "" + teacherId);
+		map.addAttribute("lessonId", "" + lessonId);
+		map.addAttribute("sectionId", "" + sectionId);
+		map.addAttribute("numberOfQuestions", "" + numberOfQuestions);
+		map.addAttribute("isTeacher", "" + isTeacher);
+		
 		map.addAttribute("serverUrl",
 				PropertiesFileReaderUtil.getPropertyValue("server.url")
 						+ "/lessons/" + lessonId + "/" + sectionId);
