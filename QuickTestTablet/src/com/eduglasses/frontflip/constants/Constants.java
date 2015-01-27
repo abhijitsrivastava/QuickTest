@@ -3,7 +3,7 @@ package com.eduglasses.frontflip.constants;
 public class Constants {
 
 	//public static final String PRESENTATION_URL = "http://ec2-54-187-106-124.us-west-2.compute.amazonaws.com:8080/FrontFlip/viewSlideShow.htm?lessonId=";
-	public static final String PRESENTATION_URL = "http://10.0.10.76:8080/QuickTest/viewSlideShow.htm?isTeacher=false&lessonId=";
+	public static final String PRESENTATION_URL = "http://115.113.54.10:8080/QuickTest/viewSlideShow.htm?isTeacher=false&lessonId=";
 	
 	public static final String KEY_PRESENTATION_ID = "presentation_id";
 	public static final String KEY_STUDENT_ID = "presentation_id";
@@ -28,7 +28,7 @@ public class Constants {
 	public static final String SERVICE_UPDATE_ANSWER = "/answer-update";
 	
 	//public static final String BASE_URL = "http://ec2-54-187-106-124.us-west-2.compute.amazonaws.com:8080";
-	public static final String BASE_URL = "http://10.0.10.76:8080";
+	public static final String BASE_URL = "http://115.113.54.10:8080";
 	
 	//public static final String SERVICE = "/FrontFlip/rest/frontflip-service/get-lesson-details?lessonId=";
 	public static final String SERVICE = "/QuickTest/rest/frontflip-service/get-lesson-details?lessonId=";
