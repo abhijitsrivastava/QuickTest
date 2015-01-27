@@ -6,7 +6,7 @@
  --%>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>FrontFlip Questions</title>
+<title>Quick Test Questions</title>
 <meta content="width=device-width, initial-scale=1" name="viewport" />
 <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" />
 <link rel="stylesheet" href="css/generic.css" type="text/css" />

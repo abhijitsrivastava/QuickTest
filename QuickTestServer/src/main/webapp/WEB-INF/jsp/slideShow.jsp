@@ -6,7 +6,7 @@
  --%>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>FrontFlip SlideShow</title>
+<title>Quick Test SlideShow</title>
 <meta content="width=device-width, initial-scale=1" name="viewport" />
 <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" />
 <link rel="stylesheet" href="css/generic.css" type="text/css" />
@@ -14,8 +14,8 @@
 
 <style>
 #svg {
-  width: 500px;
-  height: 300px;
+	width: 500px;
+	height: 300px;
 }
 </style>
 
@@ -58,7 +58,7 @@
     	
     	console.log("totalQuestion: " + totalQuestion + "\nlessonId: " + lessonId + "\nsectionId: " + sectionId);
 		for(var i=0; i<totalQuestion; i++) {
-			resourceUrls[i] = "http://ec2-54-187-106-124.us-west-2.compute.amazonaws.com:8080/lessons/" + lessonId + "/" + sectionId + "/" + (i+1) + ".png";
+			resourceUrls[i] = "${requestScope.serverUrl}"+ "/" + (i+1) + ".png";
 		}
 	});
 	
@@ -110,7 +110,7 @@
 		console.log('Subscription established on topic "${requestScope.topic}"');
 		$("#div-loader").hide();
 		$("#label-message").show();
-		$("#label-message").html("Connected!<br/>No section to display");
+		$("#label-message").html("Connected!<br/>Quick Test is running, please wait for Question!");
 		if (${requestScope.isTeacher}){		
 		$("#button-edugrade").show();
 		}
@@ -177,7 +177,7 @@
 		case "EDUGRADE":
 
 			$("#label-message").show();
-			$("#label-message").html("EduGrade is running!");
+			$("#label-message").html("QuickTest is Running!");
 			break;
 		
 		// EduGrade callback
@@ -189,7 +189,7 @@
 			$("#label-message").show();
 			$("#label-edugrade-assessment").show();
 			
-			$("#label-message").html("EduGrade is running!");
+			$("#label-message").html("QuickTest is Running!");
 			$("#label-edugrade-assessment").html("Assessment ID: " + assessmentId);
 			break;
 			
@@ -217,16 +217,20 @@
 			
 			if(serial == 0) {
 				$("#label-message").show();
-				$("#label-message").html("EduGrade is running!");
+				$("#label-message").html("QuickTest is Running!");
 			}
 			break;
 			
 		// EduGrade callback
 		case "EDUGRADE_OPEN_CHART":
-
-			$("#chart-area").show();
-			var answers = json.answers;
-			renderPieChart(answers);
+			if (${requestScope.isTeacher}){
+				$("#chart-area").show();
+				var answers = json.answers;
+				renderPieChart(answers);
+			} else {
+				$("#label-message").show();
+				$("#label-message").html("Please wait for next Question.");
+			}
 		    
 		break;
 		
@@ -246,7 +250,7 @@
 		case "CONNECTED":
 
 			$("#label-message").show();
-			$("#label-message").html("No section to display");
+			$("#label-message").html("Quick Test is running, please wait for Question!");
 			break;
 
 		case "EDUDEFINE":
@@ -500,7 +504,7 @@
 			    		$("#label-message").show();
 						$("#label-edugrade-assessment").show();
 						
-						$("#label-message").html("EduGrade is running!");
+						$("#label-message").html("QuickTest is Running!");
 						$("#label-edugrade-assessment").html("Assessment ID: " + assessmentId);
 						
 						var jsonString = '{"type":"ASSESSMENT_CREATE", "url":"", "assessmentId":"'+assessmentId+'", "teacherId":"${requestScope.teacherId}", "questionNumber":"-1"}';
@@ -747,9 +751,10 @@
 	background-color: #428bca;
 	border-color: #357ebd
 }
+
 .li-legend {
 	display: inline;
-	margin-right:20px;
+	margin-right: 20px;
 }
 </style>
 </head>
@@ -763,65 +768,98 @@
 		<div class="background_body">
 			<%@ include file="header.jsp"%>
 			<center>
-			<div id="dashboard" style="width:100%; height:100%;padding:0;margin:0;">
-				
-				<div id="div-loader" style="margin-top: 200px;">
-					<img style="display: block;" src="images/loader.gif" alt="Loading..." /> 
-					<label>Connecting to server, please wait...</label>
+				<div id="dashboard"
+					style="width: 100%; height: 100%; padding: 0; margin: 0;">
+
+					<div id="div-loader" style="margin-top: 200px;">
+						<img style="display: block;" src="images/loader.gif"
+							alt="Loading..." /> <label>Connecting to server, please
+							wait...</label>
+					</div>
+
+					<label id="label-message"
+						style="font-size: 20px; display: block; margin-top: 200px;">No
+						section to display</label> <label id="label-edugrade-assessment"
+						style="font-size: 30px; display: block;"></label> <label
+						id="label-edutools-stopwatch"
+						style="font-size: 120px; display: block; margin-top: 50px;"></label>
+
+					<img id="img-powerpoint"
+						style="width: 100%; height: 100%; display: none;"
+						alt="PowerPoint Slide" /> <img id="img-edugrade"
+						alt="PowerPoint Slide"
+						style="width: 100%; height: 100%; display: none;" />
+
+					<div id="div-edutools-noise-level"
+						style="display: none; margin-top: 125px;">
+
+						<div id="l15"
+							style="background-color: #B40404; width: 200px; height: 25px; margin: 0 200px 2px 0;"></div>
+						<div id="l14"
+							style="background-color: #B40404; width: 200px; height: 25px; margin: 0 200px 2px 0;"></div>
+						<div id="l13"
+							style="background-color: #DF0101; width: 200px; height: 25px; margin: 0 200px 2px 0;"></div>
+						<div id="l12"
+							style="background-color: #FF0000; width: 200px; height: 25px; margin: 0 200px 2px 0;"></div>
+						<div id="l11"
+							style="background-color: #FF4000; width: 200px; height: 25px; margin: 0 200px 2px 0;"></div>
+
+						<div id="l10"
+							style="background-color: #FF8000; width: 200px; height: 25px; margin: 0 200px 2px 0;"></div>
+						<div id="l9"
+							style="background-color: #FFBF00; width: 200px; height: 25px; margin: 0 200px 2px 0;"></div>
+						<div id="l8"
+							style="background-color: #FFBF00; width: 200px; height: 25px; margin: 0 200px 2px 0;"></div>
+						<div id="l7"
+							style="background-color: #FFFF00; width: 200px; height: 25px; margin: 0 200px 2px 0;"></div>
+						<div id="l6"
+							style="background-color: #D7DF01; width: 200px; height: 25px; margin: 0 200px 2px 0;"></div>
+
+						<div id="l5"
+							style="background-color: #AEB404; width: 200px; height: 25px; margin: 0 200px 2px 0;"></div>
+						<div id="l4"
+							style="background-color: #688A08; width: 200px; height: 25px; margin: 0 200px 2px 0;"></div>
+						<div id="l3"
+							style="background-color: #4B8A08; width: 200px; height: 25px; margin: 0 200px 2px 0;"></div>
+						<div id="l2"
+							style="background-color: #298A08; width: 200px; height: 25px; margin: 0 200px 2px 0;"></div>
+						<div id="l1"
+							style="background-color: #088A08; width: 200px; height: 25px; margin: 0 200px 2px 0;"></div>
+						<label id="lable-noise-status"
+							style="font-size: 50px; margin: -250px 0 0 300px;">Good
+							work!</label>
+
+					</div>
+
+					<div id="div-video" style="display: none;"></div>
+					<div id="div-eduteach" style="display: none;">
+						<div id="player"></div>
+						<input type="hidden" id="stream" value="" class="stream-class"></input>
+					</div>
+
+					<ul id="ul-legend"
+						style="margin-top: 150px; padding: 0; display: none;">
+						<li id="li-a" class="li-legend"></li>
+						<li id="li-b" class="li-legend"></li>
+						<li id="li-c" class="li-legend"></li>
+						<li id="li-d" class="li-legend"></li>
+						<li id="li-e" class="li-legend"></li>
+					</ul>
+
+					<canvas id="chart-area" style="margin-top: 50px;display:none;"
+						width="300" height="300" />
 				</div>
-				
-				<label id="label-message" style="font-size:20px;display:block; margin-top: 200px;">No section to display</label>
-				<label id="label-edugrade-assessment" style="font-size:30px; display:block;"></label>
-				<label id="label-edutools-stopwatch" style="font-size:120px; display:block; margin-top: 50px;"></label>
-				
-				<img id="img-powerpoint" style="width:100%; height:100%; display:none;" alt="PowerPoint Slide" />
-				<img id="img-edugrade" alt="PowerPoint Slide" style="width:100%; height:100%; display:none;" />
-				
-				<div id="div-edutools-noise-level" style="display:none;margin-top:125px;">
-				
-					<div id="l15" style="background-color:#B40404; width:200px; height:25px; margin:0 200px 2px 0;"></div>
-					<div id="l14" style="background-color:#B40404; width:200px; height:25px; margin:0 200px 2px 0;"></div>
-					<div id="l13" style="background-color:#DF0101; width:200px; height:25px; margin:0 200px 2px 0;"></div>
-					<div id="l12" style="background-color:#FF0000; width:200px; height:25px; margin:0 200px 2px 0;"></div>
-					<div id="l11" style="background-color:#FF4000; width:200px; height:25px; margin:0 200px 2px 0;"></div>
-					
-					<div id="l10" style="background-color:#FF8000; width:200px; height:25px; margin:0 200px 2px 0;"></div>
-					<div id="l9" style="background-color:#FFBF00; width:200px; height:25px; margin:0 200px 2px 0;"></div>
-					<div id="l8" style="background-color:#FFBF00; width:200px; height:25px; margin:0 200px 2px 0;"></div>
-					<div id="l7" style="background-color:#FFFF00; width:200px; height:25px; margin:0 200px 2px 0;"></div>
-					<div id="l6" style="background-color:#D7DF01; width:200px; height:25px; margin:0 200px 2px 0;"></div>
-					
-					<div id="l5" style="background-color:#AEB404; width:200px; height:25px; margin:0 200px 2px 0;"></div>
-					<div id="l4" style="background-color:#688A08; width:200px; height:25px; margin:0 200px 2px 0;"></div>
-					<div id="l3" style="background-color:#4B8A08; width:200px; height:25px; margin:0 200px 2px 0;"></div>
-					<div id="l2" style="background-color:#298A08; width:200px; height:25px; margin:0 200px 2px 0;"></div>
-					<div id="l1" style="background-color:#088A08; width:200px; height:25px; margin:0 200px 2px 0;"></div>
-					<label id="lable-noise-status" style="font-size:50px; margin: -250px 0 0 300px;">Good work!</label>
-				
-				</div>
-				
-				<div id="div-video" style="display: none;"></div>
-				<div id="div-eduteach" style="display: none;">
-					<div id="player"></div>
-					<input type="hidden" id="stream" value="" class="stream-class"></input>
-				</div>
-				
-				<ul id="ul-legend" style="margin-top: 150px; padding:0;display:none;">
-				<li id="li-a" class="li-legend"></li>
-				<li id="li-b" class="li-legend"></li>
-				<li id="li-c" class="li-legend"></li>
-				<li id="li-d" class="li-legend"></li>
-				<li id="li-e" class="li-legend"></li>
-				</ul>
-				
-				<canvas id="chart-area" style="margin-top: 50px;display:none;" width="300" height="300"/>
-			</div>
-			<button id="button-edugrade" onclick="javascript: handleQuiz(this);" style="margin-top:50px; display:none;">Start Assessment</button>
-			<button id="button-toggle-fullscreen-ppt" onclick="$('#dashboard').toggleFullScreen();" style="display: block;margin-top: 100px;">Toggle fullscreen mode</button>
-			<span id="span-fullscreen-msg" style="display: block;">*For best view and experience, select full screen mode</span>
+				<button id="button-edugrade" onclick="javascript: handleQuiz(this);"
+					style="margin-top: 50px; display: none;">Start Assessment</button>
+				<button id="button-toggle-fullscreen-ppt"
+					onclick="$('#dashboard').toggleFullScreen();"
+					style="display: block; margin-top: 100px;">Toggle
+					fullscreen mode</button>
+				<span id="span-fullscreen-msg" style="display: block;">*For
+					best view and experience, select full screen mode</span>
 			</center>
 			<%@ include file="footer.jsp"%>
-			
+
 		</div>
 	</div>
 </body>

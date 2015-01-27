@@ -5,7 +5,7 @@
 <%@ page pageEncoding="UTF-8"%>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>FrontFlip Section</title>
+<title>Quick Test Section</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" />
 <link rel="stylesheet" href="css/generic.css" type="text/css" />

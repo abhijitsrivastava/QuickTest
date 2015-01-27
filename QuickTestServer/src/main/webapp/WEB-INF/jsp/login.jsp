@@ -5,7 +5,7 @@
 
 <html>
 <head>
-<title>FrontFlip Login</title>
+<title>Quick Test Login</title>
 <meta content="width=device-width, initial-scale=1" name="viewport" />
 
 <script type="text/javascript" src='js/jquery-1.11.0.min.js'></script>

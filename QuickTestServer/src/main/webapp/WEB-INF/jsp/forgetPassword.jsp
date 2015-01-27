@@ -5,7 +5,7 @@
 
 <html>
 <head>
-<title>FrontFlip Forget Password Page</title>
+<title>Quick Test Forget Password Page</title>
 <meta content="width=device-width, initial-scale=1" name="viewport" />
 <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" />
 <link rel="stylesheet" href="css/signin.css" type="text/css" />
@@ -70,7 +70,7 @@
 
 						<div class="control-group">
 							<div class="controls">
-								<a href="login.htm">Already on FrontFlip? Login</a>
+								<a href="login.htm">Already on Quick Test? Login</a>
 							</div>
 						</div>
 					</form:form>
