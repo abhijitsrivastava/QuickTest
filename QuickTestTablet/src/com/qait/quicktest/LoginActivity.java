@@ -1,4 +1,4 @@
-package com.eduglasses.frontflip;
+package com.qait.quicktest;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,9 +8,9 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.eduglasses.frontflip.constants.Constants;
-import com.eduglasses.frontflip.model.LoginData;
-import com.eduglasses.frontflip.utils.FrontFlipTask;
+import com.qait.quicktest.constants.Constants;
+import com.qait.quicktest.model.LoginData;
+import com.qait.quicktest.utils.FrontFlipTask;
 
 public class LoginActivity extends Activity {
 

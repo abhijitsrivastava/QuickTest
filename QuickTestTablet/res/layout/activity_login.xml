@@ -31,7 +31,7 @@
             android:orientation="vertical"
             android:padding="20dp" >
 
-            <com.eduglasses.frontflip.utils.CalibriTextView
+            <com.qait.quicktest.utils.CalibriTextView
                 android:id="@+id/textViewPresentationId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
                 android:textCursorDrawable="@null" >
             </EditText>
 
-            <com.eduglasses.frontflip.utils.CalibriTextView
+            <com.qait.quicktest.utils.CalibriTextView
                 android:id="@+id/textViewStudentId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -75,7 +75,7 @@
                 android:textCursorDrawable="@null" >
             </EditText>
 
-            <com.eduglasses.frontflip.utils.CalibriButton
+            <com.qait.quicktest.utils.CalibriButton
                 android:id="@+id/buttonLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

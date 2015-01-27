@@ -1,8 +1,6 @@
-package com.eduglasses.frontflip.utils;
+package com.qait.quicktest.utils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.http.client.ClientProtocolException;
 import org.json.JSONArray;
@@ -10,14 +8,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import com.eduglasses.frontflip.LoginActivity;
-import com.eduglasses.frontflip.PresentationActivity;
-import com.eduglasses.frontflip.R;
-import com.eduglasses.frontflip.model.LoginData;
+import com.qait.quicktest.LoginActivity;
+import com.qait.quicktest.R;
 
 public class FrontFlipTask extends AsyncTask<Object, Void, JSONArray> {
 	private LoginActivity activity;

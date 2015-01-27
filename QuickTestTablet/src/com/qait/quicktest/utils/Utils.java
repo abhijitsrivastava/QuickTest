@@ -1,4 +1,4 @@
-package com.eduglasses.frontflip.utils;
+package com.qait.quicktest.utils;
 
 import java.io.IOException;
 import java.lang.reflect.Method;

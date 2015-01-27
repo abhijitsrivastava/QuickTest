@@ -1,4 +1,4 @@
-package com.eduglasses.frontflip.messaging;
+package com.qait.quicktest.messaging;
 
 import java.util.Arrays;
 
@@ -13,10 +13,10 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import android.app.Activity;
 
-import com.eduglasses.frontflip.PresentationActivity;
-import com.eduglasses.frontflip.constants.Constants;
-import com.eduglasses.frontflip.model.LoginData;
-import com.eduglasses.frontflip.utils.Utils;
+import com.qait.quicktest.PresentationActivity;
+import com.qait.quicktest.constants.Constants;
+import com.qait.quicktest.model.LoginData;
+import com.qait.quicktest.utils.Utils;
 
 public class MQTTConnection {
 

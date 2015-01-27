@@ -1,4 +1,4 @@
-package com.eduglasses.frontflip.messaging;
+package com.qait.quicktest.messaging;
 
 public interface MQTTCallbackListener {
 

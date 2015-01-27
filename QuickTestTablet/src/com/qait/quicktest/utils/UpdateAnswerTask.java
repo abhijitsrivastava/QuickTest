@@ -1,4 +1,4 @@
-package com.eduglasses.frontflip.utils;
+package com.qait.quicktest.utils;
 
 import java.io.IOException;
 
@@ -11,7 +11,7 @@ import org.json.JSONObject;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
-import com.eduglasses.frontflip.constants.Constants;
+import com.qait.quicktest.constants.Constants;
 
 public class UpdateAnswerTask extends AsyncTask<String, String, String> {
 

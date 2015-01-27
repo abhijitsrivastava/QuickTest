@@ -1,4 +1,4 @@
-package com.eduglasses.frontflip.utils;
+package com.qait.quicktest.utils;
 
 import android.content.Context;
 import android.graphics.Typeface;

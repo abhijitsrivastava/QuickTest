@@ -1,4 +1,4 @@
-package com.eduglasses.frontflip.constants;
+package com.qait.quicktest.constants;
 
 public class Constants {
 

@@ -1,4 +1,4 @@
-package com.eduglasses.frontflip.model;
+package com.qait.quicktest.model;
 
 public class LoginData {
 

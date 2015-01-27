@@ -1,4 +1,4 @@
-package com.eduglasses.frontflip;
+package com.qait.quicktest;
 
 import java.net.URLDecoder;
 
@@ -22,12 +22,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.eduglasses.frontflip.constants.Constants;
-import com.eduglasses.frontflip.messaging.MQTTCallbackListener;
-import com.eduglasses.frontflip.messaging.MQTTConnection;
-import com.eduglasses.frontflip.model.LoginData;
-import com.eduglasses.frontflip.utils.UpdateAnswerTask;
-import com.eduglasses.frontflip.utils.Utils;
+import com.qait.quicktest.constants.Constants;
+import com.qait.quicktest.messaging.MQTTCallbackListener;
+import com.qait.quicktest.messaging.MQTTConnection;
+import com.qait.quicktest.model.LoginData;
+import com.qait.quicktest.utils.UpdateAnswerTask;
+import com.qait.quicktest.utils.Utils;
 
 public class PresentationActivity extends Activity {
 
